@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>Task List 📝</h2>
+
+  <p style="background: yellow;">Tasks found: {{ tasks.length }}</p>
+
+  @for (task of tasks; track task.id) {
+    <div class="task-card">
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+      <small>ID: {{ task.id }} | Status: {{ task.completed ? '✅ Done' : '⏳ Pending' }}</small>
+    </div>
+  } @empty {
+    <p>No tasks found inside the list.</p>
+  }
+
+</div>
