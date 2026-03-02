@@ -1,12 +1,24 @@
 import { Component } from '@angular/core';
-import { TaskListComponent } from './components/task-list/task-list';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { AuthService } from './services/auth';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TaskListComponent], // <--- Removed RouterOutlet from here
-  templateUrl: './app.html'
+  imports: [CommonModule, RouterOutlet, RouterLink],
+  templateUrl: './app.html',
 })
 export class AppComponent {
   title = 'taskmaster-frontend';
+
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) {}
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://taskmasterbyshashwat.onrender.com/api/v1'
+  apiUrl: 'https://taskmasterbyshashwat.onrender.com/api/v1',
 };

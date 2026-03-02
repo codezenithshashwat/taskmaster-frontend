@@ -1,15 +1,25 @@
 <nav class="navbar navbar-dark bg-dark mb-4">
   <div class="container">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" routerLink="/tasks">
       <i class="bi bi-check2-square me-2"></i>TaskMaster 🚀
     </a>
+    @if (authService.isLoggedIn()) {
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-light small">
+          <i class="bi bi-person-circle me-1"></i>{{ authService.getUsername() }}
+        </span>
+        <button class="btn btn-outline-light btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </button>
+      </div>
+    }
   </div>
 </nav>
 
 <main class="container">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <app-task-list></app-task-list>
+    <div class="col-md-10">
+      <router-outlet></router-outlet>
     </div>
   </div>
 </main>

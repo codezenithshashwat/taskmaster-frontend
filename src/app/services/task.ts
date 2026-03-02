@@ -1,28 +1,49 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+export type TaskStatusType = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE';
+
+export interface Task {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+  priority: Priority;
+  status: TaskStatusType;
+  dueDate: string | null;
+  createdAt: string;
+}
+
+export interface TaskRequest {
+  title: string;
+  description: string;
+  dueDate: string | null;
+  completed: boolean;
+  priority: string | null;
+  status: string | null;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
-  // Now reads from environment.ts (dev) or environment.prod.ts (production)
   private apiUrl = `${environment.apiUrl}/tasks`;
-  private readonly PAGE_SIZE = 100;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTasks(): Observable<any> {
-    return this.http.get(`${this.apiUrl}?sort=id,desc&size=${this.PAGE_SIZE}`);
+    return this.http.get(`${this.apiUrl}?sort=id,desc`);
   }
 
-  createTask(task: any): Observable<any> {
-    return this.http.post(this.apiUrl, task);
+  createTask(task: TaskRequest): Observable<Task> {
+    return this.http.post<Task>(this.apiUrl, task);
   }
 
-  updateTask(id: number, task: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, task);
+  updateTask(id: number, task: TaskRequest): Observable<Task> {
+    return this.http.put<Task>(`${this.apiUrl}/${id}`, task);
   }
 
   deleteTask(id: number): Observable<any> {
@@ -30,6 +51,15 @@ export class TaskService {
   }
 
   searchTasks(keyword: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search?keyword=${encodeURIComponent(keyword)}&size=${this.PAGE_SIZE}`);
+    const params = new HttpParams().set('keyword', keyword);
+    return this.http.get(`${this.apiUrl}/search`, { params });
+  }
+
+  getTasksByStatus(status: TaskStatusType): Observable<any> {
+    return this.http.get(`${this.apiUrl}/status/${encodeURIComponent(status)}`);
+  }
+
+  getTasksByPriority(priority: Priority): Observable<any> {
+    return this.http.get(`${this.apiUrl}/priority/${encodeURIComponent(priority)}`);
   }
 }
