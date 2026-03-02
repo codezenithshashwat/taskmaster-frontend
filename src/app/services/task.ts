@@ -9,11 +9,12 @@ import { environment } from '../../environments/environment';
 export class TaskService {
   // Now reads from environment.ts (dev) or environment.prod.ts (production)
   private apiUrl = `${environment.apiUrl}/tasks`;
+  private readonly PAGE_SIZE = 100;
 
   constructor(private http: HttpClient) { }
 
   getTasks(): Observable<any> {
-    return this.http.get(`${this.apiUrl}?sort=id,desc`);
+    return this.http.get(`${this.apiUrl}?sort=id,desc&size=${this.PAGE_SIZE}`);
   }
 
   createTask(task: any): Observable<any> {
@@ -29,6 +30,6 @@ export class TaskService {
   }
 
   searchTasks(keyword: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search?keyword=${keyword}`);
+    return this.http.get(`${this.apiUrl}/search?keyword=${encodeURIComponent(keyword)}&size=${this.PAGE_SIZE}`);
   }
 }
